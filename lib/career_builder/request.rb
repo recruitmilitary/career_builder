@@ -12,6 +12,14 @@ module CareerBuilder
 
     private
 
+    def validate_options
+      raise ArgumentError unless valid_options?
+    end
+
+    def valid_options?
+      (options.keys - self.class.const_get(:VALID_OPTIONS)).empty?
+    end
+
     def require_authentication
       if !client.authenticated?
         unless client.authenticate
