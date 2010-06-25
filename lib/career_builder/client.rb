@@ -41,9 +41,9 @@ module CareerBuilder
       require_authentication
       response = perform_request("V2_AdvancedResumeSearch", transform_options_to_xml(options))
 
-      xml = Nokogiri::XML(response.body)
-      tag = xml.children.first
-      parsed_body = Nokogiri::XML(tag.text).to_s
+      xml_body = Nokogiri::XML(response.body) # not sure why I have to do it this way
+      inner_xml = xml_body.children.first
+      Resume.parse(inner_xml.text)
     end
 
     private

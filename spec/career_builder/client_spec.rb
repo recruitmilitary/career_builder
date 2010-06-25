@@ -88,7 +88,7 @@ describe CareerBuilder::Client do
 
         it 'should return a collection of resumes that match the criteria' do
           @results = @client.advanced_resume_search(:keywords => "Ruby")
-          @results.should == nil
+          @results.should_not be_empty
         end
 
       end
