@@ -4,16 +4,16 @@ module CareerBuilder
 
     RESUME_SERVICE_ENDPOINT_URL = 'http://ws.careerbuilder.com/resumes/resumes.asmx'
 
+    attr_reader :session_token
+
     def initialize(email, password)
       @email, @password = email, password
     end
 
     def authenticate
       response = perform_request("BeginSessionV2", "<Email>#{@email}</Email><Password>#{@password}</Password>")
+      packet = Nokogiri::XML(parse_terrible_response(response))
 
-      xml = Nokogiri::XML(response.body)
-      tag = xml.children.first
-      packet = Nokogiri::XML(tag.text)
       if session_token = packet.search("//SessionToken")
         session_token_text = session_token.text
         unless session_token_text == "Invalid"
@@ -23,7 +23,7 @@ module CareerBuilder
     end
 
     def authenticated?
-      !@session_token.nil?
+      !session_token.nil?
     end
 
     # List of valid options available at:
@@ -39,21 +39,58 @@ module CareerBuilder
     def advanced_resume_search(options = {})
       raise ArgumentError unless valid_options_for_advanced_resume_search?(options)
       require_authentication
+      options.merge!(:session_token => session_token)
       response = perform_request("V2_AdvancedResumeSearch", transform_options_to_xml(options))
 
-      xml_body = Nokogiri::XML(response.body) # not sure why I have to do it this way
-      inner_xml = xml_body.children.first
-      Resume.parse(inner_xml.text)
+      xml_from_response = parse_terrible_response(response)
+      ResumeSearchResult.parse(xml_from_response)
     end
 
-    private
+    VALID_OPTIONS_FOR_GET_RESUME = [:resume_id, :cust_acct_code, :get_word_doc_if_available]
+
+    def valid_options_for_get_resume?(options)
+      (options.keys - VALID_OPTIONS_FOR_GET_RESUME).empty?
+    end
+
+    def get_resume(options = {})
+      raise ArgumentError unless valid_options_for_get_resume?(options)
+      require_authentication
+      options.merge!(:session_token => session_token)
+      response = perform_request("V2_GetResume", transform_options_to_xml(options))
+
+      xml_from_response = parse_terrible_response(response)
+      Resume.parse(xml_from_response, :single => true)
+    end
+
+    def parse_terrible_response(response)
+      xml_body = Nokogiri::XML(response.body) # not sure why I have to do it this way
+      inner_xml = xml_body.children.first
+      inner_xml.text
+    end
+
+    CUSTOM_KEY_TRANSFORMS = {
+      :resume_id => "ResumeID"
+    }
+
+    def transform_key(key)
+      if custom_transform = CUSTOM_KEY_TRANSFORMS[key]
+        custom_transform
+      else
+        key.to_s.camelize
+      end
+    end
 
     def transform_key_value_to_tag(key, value)
-      "<#{key.to_s.camelize}>#{value}</#{key.to_s.camelize}>"
+      "<#{transform_key(key)}>#{value}</#{transform_key(key)}>"
     end
 
     def transform_options_to_xml(options)
       elements = []
+
+      # let's make sure SessionToken is always at the top of the request
+      if session_key = options.delete(:session_token)
+        elements << transform_key_value_to_tag(:session_token, session_token)
+      end
 
       options.each do |key, value|
         elements << transform_key_value_to_tag(key, value)
