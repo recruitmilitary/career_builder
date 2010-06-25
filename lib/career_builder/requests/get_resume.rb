@@ -4,7 +4,7 @@ module CareerBuilder
 
     class GetResume < Request
 
-      VALID_OPTIONS = [:resume_id, :cust_acct_code, :get_word_doc_if_available]
+      VALID_OPTIONS = [:resume_id, :cust_acct_code, :get_word_doc_if_available].freeze
 
       def perform
         validate_options
