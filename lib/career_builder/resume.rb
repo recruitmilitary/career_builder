@@ -5,65 +5,6 @@ module CareerBuilder
     # Sample response:
     # http://ws.careerbuilder.com/resumes/resumes.asmx/V2_GetResume_SampleResponse
 
-    class Location
-
-      include HappyMapper
-
-      element :city, String, :tag => "City"
-      element :state, String, :tag => "State"
-      element :zip_code, String, :tag => "ZipCode"
-      element :work_status, String, :tag => "WorkStatus"
-
-    end
-
-    class Pay
-
-      include HappyMapper
-
-      element :amount, String, :tag => "Amount"
-      element :per, String, :tag => "Per"
-
-    end
-
-    class Interest
-
-      include HappyMapper
-
-      element :interest, String, :tag => "Interest"
-      element :experience_months, Integer, :tag => "ExperienceMonths"
-
-    end
-
-    class Company
-
-      include HappyMapper
-
-      element :name, String, :tag => "CompanyName"
-      element :job_title, String, :tag => "JobTitle"
-      element :tenure, String, :tag => "Tenure"
-
-    end
-
-    class School
-
-      include HappyMapper
-
-      element :name, String, :tag => "SchoolName"
-      element :major, String, :tag => "Major"
-      element :degree, String, :tag => "Degree"
-      element :graduation_date, String, :tag => "GraduationDate"
-
-    end
-
-    class WordDocument
-
-      include HappyMapper
-
-      element :filename, String, :tag => "FileName"
-      element :base64_date, String, :tag => "Base64Data"
-
-    end
-
     include HappyMapper
 
     tag 'Packet'
