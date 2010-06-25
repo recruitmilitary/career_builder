@@ -10,6 +10,10 @@ module CareerBuilder
       @client, @options = client, options
     end
 
+    def perform
+      validate_options if defined?(self.class.const_get(:VALID_OPTIONS))
+    end
+
     private
 
     def validate_options
@@ -18,14 +22,6 @@ module CareerBuilder
 
     def valid_options?
       (options.keys - self.class.const_get(:VALID_OPTIONS)).empty?
-    end
-
-    def require_authentication
-      if !client.authenticated?
-        unless client.authenticate
-          raise InvalidCredentials
-        end
-      end
     end
 
     def session_token

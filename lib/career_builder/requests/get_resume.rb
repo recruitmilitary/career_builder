@@ -2,14 +2,12 @@ module CareerBuilder
 
   module Requests
 
-    class GetResume < Request
+    class GetResume < Request::Authenticated
 
       VALID_OPTIONS = [:resume_id, :cust_acct_code, :get_word_doc_if_available].freeze
 
       def perform
-        validate_options
-        require_authentication
-        options.merge!(:session_token => session_token)
+        super
         response = perform_request("V2_GetResume", transform_options_to_xml(options))
 
         xml_from_response = parse_terrible_response(response)

@@ -2,7 +2,7 @@ module CareerBuilder
 
   module Requests
 
-    class AdvancedResumeSearch < Request
+    class AdvancedResumeSearch < Request::Authenticated
 
       # List of valid options available at:
       # http://ws.careerbuilder.com/resumes/resumes.asmx/V2_AdvancedResumeSearch_ValidFields
@@ -28,9 +28,7 @@ module CareerBuilder
                        :cb_maximum_experience].freeze
 
       def perform
-        validate_options
-        require_authentication
-        options.merge!(:session_token => session_token)
+        super
         response = perform_request("V2_AdvancedResumeSearch", transform_options_to_xml(options))
 
         xml_from_response = parse_terrible_response(response)
