@@ -1,9 +1,9 @@
-= career_builder
+# career_builder
 
-Description goes here.
+A library for interacting with the CareerBuilder V2 HTTP XML API.
 
-== Note on Patches/Pull Requests
- 
+## Note on Patches/Pull Requests
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
