@@ -21,7 +21,7 @@ module CareerBuilder
       loop do
 
         results.each do |resume|
-          yield resume
+          yield Resume.new(client, resume)
         end
 
         current_page += 1

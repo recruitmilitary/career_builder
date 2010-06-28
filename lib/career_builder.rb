@@ -7,6 +7,14 @@ require 'nokogiri'
 require 'happymapper'
 require 'active_support/inflector'
 
+if RUBY_VERSION < '1.9'
+  class BasicObject 
+    instance_methods.each do |m| 
+      undef_method(m) if m.to_s !~ /(?:^__|^nil\?$|^send$|^object_id$)/ 
+    end 
+  end
+end
+
 require 'career_builder/errors'
 require 'career_builder/api/resume_search_result'
 require 'career_builder/api/resume_search'

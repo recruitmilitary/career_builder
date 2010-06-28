@@ -17,7 +17,7 @@ module CareerBuilder
     end
 
     def resumes(options = {})
-      Resume::LazyCollection.new(options)
+      Resume::LazyCollection.new(self, options)
     end
 
     def advanced_resume_search(options = {})
