@@ -12,6 +12,10 @@ module CareerBuilder
     def real_contact_email
       full_resume.contact_email
     end
+    
+    def home_location
+      full_resume.home_location
+    end
 
     private
 
