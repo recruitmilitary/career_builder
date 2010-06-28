@@ -9,6 +9,7 @@ require 'active_support/inflector'
 
 require 'career_builder/errors'
 require 'career_builder/resume_search_result'
+require 'career_builder/resume_search'
 require 'career_builder/resume/company'
 require 'career_builder/resume/interest'
 require 'career_builder/resume/location'

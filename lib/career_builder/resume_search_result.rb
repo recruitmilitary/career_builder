@@ -14,7 +14,7 @@ module CareerBuilder
     element :job_title, String, :tag => "JobTitle"
     element :recent_employer, String, :tag => "RecentEmployer"
     element :recent_job_title, String, :tag => "RecentJobTitle"
-    element :recent_pay, String, :tag => "RecentPay"
+    element :recent_pay, Integer, :tag => "RecentPay"
     element :id, String, :tag => "ResumeID"
     element :user_did, String, :tag => "UserDID"
     element :contact_email_md5, String, :tag => "ContactEmailMD5"

@@ -85,11 +85,72 @@ describe CareerBuilder::Client do
 
         before do
           stub_request(:post, "http://ws.careerbuilder.com/resumes/resumes.asmx/V2_AdvancedResumeSearch").with(:body => 'Packet=%3cPacket%3e%3cSessionToken%3e42%3c%2fSessionToken%3e%3cKeywords%3eRuby%3c%2fKeywords%3e%3c%2fPacket%3e').to_return(:body => "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string xmlns=\"http://ws.careerbuilder.com/resumes/\">&lt;Packet&gt;&lt;Errors /&gt;&lt;PageNumber&gt;1&lt;/PageNumber&gt;&lt;SearchTime&gt;06/25/2010 12:03:14&lt;/SearchTime&gt;&lt;FirstRec&gt;1&lt;/FirstRec&gt;&lt;LastRec&gt;100&lt;/LastRec&gt;&lt;Hits&gt;3&lt;/Hits&gt;&lt;MaxPage&gt;1&lt;/MaxPage&gt;&lt;Results&gt;&lt;ResumeResultItem_V3&gt;&lt;ContactEmail&gt;Rhd4G067G4JVTLW99H7_A7C14Q67VKG000YBSCR~CBWS^U7A3LY6YY46V1MT0RJK@resume.cbdr.com&lt;/ContactEmail&gt;&lt;ContactName&gt;Rebecca Bernard&lt;/ContactName&gt;&lt;HomeLocation&gt;US-OH-Milford&lt;/HomeLocation&gt;&lt;LastUpdate&gt;2010/5/13&lt;/LastUpdate&gt;&lt;ResumeTitle&gt;BERNARD_SYSTEMS_ENGINEER&lt;/ResumeTitle&gt;&lt;JobTitle&gt;BERNARD_SYSTEMS_ENGINEER&lt;/JobTitle&gt;&lt;RecentEmployer&gt;TATA CONSULTANCY SERVICES&lt;/RecentEmployer&gt;&lt;RecentJobTitle&gt;CONSULTANCY SERVICES- Systems Engineer&lt;/RecentJobTitle&gt;&lt;RecentPay&gt;0&lt;/RecentPay&gt;&lt;ResumeID&gt;Rhd4G067G4JVTLW99H7&lt;/ResumeID&gt;&lt;UserDID&gt;U7X86R61VVKS4FWS03T&lt;/UserDID&gt;&lt;ContactEmailMD5&gt;139013c2fa2b945bdc340f8a698b009e&lt;/ContactEmailMD5&gt;&lt;/ResumeResultItem_V3&gt;&lt;ResumeResultItem_V3&gt;&lt;ContactEmail&gt;Rhe7TZ764LHG1GQTPSM_A7C14Q67VKG000YBSCR~CBWS^U7A3LY6YY46V1MT0RJK@resume.cbdr.com&lt;/ContactEmail&gt;&lt;ContactName&gt;chris grader&lt;/ContactName&gt;&lt;HomeLocation&gt;US-OH-Milford&lt;/HomeLocation&gt;&lt;LastUpdate&gt;2010/6/4&lt;/LastUpdate&gt;&lt;ResumeTitle&gt;Chris Grader resume&lt;/ResumeTitle&gt;&lt;JobTitle&gt;Chris Grader resume&lt;/JobTitle&gt;&lt;RecentEmployer&gt;Millennial Medical, Inc&lt;/RecentEmployer&gt;&lt;RecentJobTitle&gt;Regional Sales Manager/Midwest Distributor&lt;/RecentJobTitle&gt;&lt;RecentPay&gt;0&lt;/RecentPay&gt;&lt;ResumeID&gt;Rhe7TZ764LHG1GQTPSM&lt;/ResumeID&gt;&lt;UserDID&gt;U346V1MKGCHPGCF9S8&lt;/UserDID&gt;&lt;ContactEmailMD5&gt;cfba57bf848b78211d99348cf0f90879&lt;/ContactEmailMD5&gt;&lt;/ResumeResultItem_V3&gt;&lt;ResumeResultItem_V3&gt;&lt;ContactEmail&gt;RH52G867678F7GH02Q3_A7C14Q67VKG000YBSCR~CBWS^U7A3LY6YY46V1MT0RJK@resume.cbdr.com&lt;/ContactEmail&gt;&lt;ContactName&gt;Jeffrey Davis&lt;/ContactName&gt;&lt;HomeLocation&gt;US-OH-Goshen&lt;/HomeLocation&gt;&lt;LastUpdate&gt;2010/5/23&lt;/LastUpdate&gt;&lt;ResumeTitle&gt;Warehouse Distribution Specialist&lt;/ResumeTitle&gt;&lt;JobTitle&gt;Warehouse Distribution Specialist&lt;/JobTitle&gt;&lt;RecentEmployer&gt;OWENS &amp;amp; MINOR&lt;/RecentEmployer&gt;&lt;RecentJobTitle&gt;Warehouse Lead Supervisor&lt;/RecentJobTitle&gt;&lt;RecentPay&gt;35776&lt;/RecentPay&gt;&lt;ResumeID&gt;RH52G867678F7GH02Q3&lt;/ResumeID&gt;&lt;UserDID&gt;U1C29V68M3YM95SP0XK&lt;/UserDID&gt;&lt;ContactEmailMD5&gt;e814ebaa93aae5c3719e27d26d5af917&lt;/ContactEmailMD5&gt;&lt;/ResumeResultItem_V3&gt;&lt;/Results&gt;&lt;/Packet&gt;</string>")
+          @search = @client.advanced_resume_search(:keywords => "Ruby")
         end
 
-        it 'should return a collection of resumes that match the criteria' do
-          @results = @client.advanced_resume_search(:keywords => "Ruby")
-          @results.should_not be_empty
+        it 'should have the correct page number' do
+          @search.page_number.should == 1
+        end
+
+        it 'should have the correct search time' do
+          @search.search_time.should == Time.mktime(2010, 6, 25, 12, 3, 14)
+        end
+
+        it 'should return the correct number of hits' do
+          @search.hits.should == 3
+        end
+
+        it 'should return the correct max page' do
+          @search.max_page.should == 1
+        end
+
+        describe "#results" do
+
+          before do
+            @results = @search.results
+            @result  = @results.first
+          end
+
+          it 'should return the correct contact email' do
+            @result.contact_email.should == "Rhd4G067G4JVTLW99H7_A7C14Q67VKG000YBSCR~CBWS^U7A3LY6YY46V1MT0RJK@resume.cbdr.com"
+          end
+
+          it 'should return the correct contact name' do
+            @result.contact_name.should == "Rebecca Bernard"
+          end
+
+          it 'should return the correct home location' do
+            @result.home_location.should == "US-OH-Milford"
+          end
+
+          it 'should return the correct last update' do
+            @result.last_update.should == Date.new(2010, 5, 13)
+          end
+
+          it 'should return the correct resume title' do
+            @result.title.should == "BERNARD_SYSTEMS_ENGINEER"
+          end
+
+          it 'should return the correct job title' do
+            @result.job_title.should == "BERNARD_SYSTEMS_ENGINEER"
+          end
+
+          it 'should return the correct recent pay' do
+            @result.recent_pay.should == 0
+          end
+
+          it 'should return the correct id' do
+            @result.id.should == "Rhd4G067G4JVTLW99H7"
+          end
+
+          it 'should return the correct user id' do
+            @result.user_did.should == "U7X86R61VVKS4FWS03T"
+          end
+
+          it 'should return the correct contact email md5' do
+            @result.contact_email_md5.should == "139013c2fa2b945bdc340f8a698b009e"
+          end
+
         end
 
       end
@@ -160,12 +221,266 @@ describe CareerBuilder::Client do
       context "with valid options" do
 
         before do
-          stub_request(:post, "http://ws.careerbuilder.com/resumes/resumes.asmx/V2_GetResume").with(:body => 'Packet=%3cPacket%3e%3cSessionToken%3e42%3c%2fSessionToken%3e%3cResumeID%3eRH52G867678F7GH02Q3%3c%2fResumeID%3e%3c%2fPacket%3e').to_return(:body => "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string xmlns=\"http://ws.careerbuilder.com/resumes/\">&lt;Packet&gt;&lt;TimeStamp&gt;6/25/2010 3:19:20 PM&lt;/TimeStamp&gt;&lt;ResumeID&gt;RH52G867678F7GH02Q3&lt;/ResumeID&gt;&lt;ResumeTitle&gt;Warehouse Distribution Specialist&lt;/ResumeTitle&gt;&lt;ContactName&gt;Jeffrey Davis&lt;/ContactName&gt;&lt;ContactEmail&gt;Jeffd1969@aol.com&lt;/ContactEmail&gt;&lt;ContactPhone&gt;513-625-7228&lt;/ContactPhone&gt;&lt;HomeLocation&gt;&lt;City&gt;Goshen&lt;/City&gt;&lt;State&gt;OH&lt;/State&gt;&lt;Country&gt;US&lt;/Country&gt;&lt;ZipCode&gt;45122&lt;/ZipCode&gt;&lt;WorkStatus&gt;Can work for any employer&lt;/WorkStatus&gt;&lt;/HomeLocation&gt;&lt;Relocations /&gt;&lt;MaxCommuteMiles&gt;10&lt;/MaxCommuteMiles&gt;&lt;TravelPreference&gt;Up to 25%&lt;/TravelPreference&gt;&lt;CurrentlyEmployed&gt;Yes&lt;/CurrentlyEmployed&gt;&lt;MostRecentPay&gt;&lt;Amount&gt;35776&lt;/Amount&gt;&lt;Per&gt;year&lt;/Per&gt;&lt;/MostRecentPay&gt;&lt;DesiredPay&gt;&lt;Amount&gt;45000&lt;/Amount&gt;&lt;Per&gt;year&lt;/Per&gt;&lt;/DesiredPay&gt;&lt;DesiredJobTypes&gt;&lt;string&gt;Full Time&lt;/string&gt;&lt;/DesiredJobTypes&gt;&lt;MostRecentTitle&gt;Warehouse Lead Supervisor&lt;/MostRecentTitle&gt;&lt;ExperienceMonths&gt;216&lt;/ExperienceMonths&gt;&lt;Management&gt;&lt;ManagedOthers&gt;No&lt;/ManagedOthers&gt;&lt;NumberManaged&gt;0&lt;/NumberManaged&gt;&lt;/Management&gt;&lt;JobsLastThreeYears&gt;0&lt;/JobsLastThreeYears&gt;&lt;LastJobTenureMonths&gt;0&lt;/LastJobTenureMonths&gt;&lt;SecurityClearance&gt;No&lt;/SecurityClearance&gt;&lt;FelonyConvictions&gt;No&lt;/FelonyConvictions&gt;&lt;HighestDegree&gt;None&lt;/HighestDegree&gt;&lt;Certifications /&gt;&lt;MotivationToChangeJobs /&gt;&lt;EmploymentType /&gt;&lt;LastUpdated&gt;5/23/2010 10:41:12 PM&lt;/LastUpdated&gt;&lt;Languages&gt;&lt;string&gt;English&lt;/string&gt;&lt;/Languages&gt;&lt;DesiredShiftPreferences&gt;&lt;string /&gt;&lt;/DesiredShiftPreferences&gt;&lt;Interests&gt;&lt;ExtInterest&gt;&lt;Interest&gt;Warehouse&lt;/Interest&gt;&lt;ExperienceMonths&gt;216&lt;/ExperienceMonths&gt;&lt;/ExtInterest&gt;&lt;/Interests&gt;&lt;ResumeText&gt;JEFFREY A. DAVIS                                                     6713\r\nBray Road   Goshen, OH 45122\r\nJeffd1969@aol.com\r\nHm 513-625-7228    Cell 513-679-1446\r\n\r\n\r\nSUMMARY OF QUALIFICATIONS\r\n\r\n        Warehouse/Inventory professional with over 18 years experience\r\n        optimizing operations in distribution and\r\n        manufacturing.  Expert in development and implementation of\r\n        successful operations.  Proven track\r\n        record of turning around troubled operations, establishing\r\n        successful operational procedures,  restructuring\r\n        organizations and training employees.  Management style focuses\r\n        on interdepartmental teamwork with a\r\n        hands-on approach.  This allows me to motivate and maximize\r\n        everyone's potential.\r\n\r\nPROFESSIONAL EXPERIENCE\r\n\r\n                             OWENS &amp;amp; MINOR,  Hebron, KY - Warehouse Lead\r\n                             Supervisor  (2008 - present)\r\n\r\n         Lead Supervisor for this multimillion dollar distributor of\r\n         medical supplies.   I run all shipping operations for several\r\n         major hospital groups.   The largest being Ohio State University\r\n         as well as Good Sam, Bethesda North, Childrens and the PHP\r\n         group.  O&amp;amp;M is the nation's largest distributor of national\r\n         name-brand medical and surgical supplies.  My logistics\r\n         expertise along with state of the art technologies allows me to\r\n         run an extremely efficient operation.  I oversee over 40\r\n         warehouse workers and make sure all pallets shipped are\r\n         compliant with O&amp;amp;M's strict guidelines.  We audit picked product\r\n         daily and utilize a check and balance procedure to maximize our\r\n         efforts to make sure all our customers receive their products\r\n         not only accurately but in a timely manner.\r\n\r\n\r\n                            THE HOME DEPOT, Beechmont, OH - Sales\r\n                            Specialist  (2005-Present)\r\n\r\n         Skilled trade professional in the Millwork, lumber and building\r\n         materials departments.  I am responsible for providing\r\n         customers with professional advice on getting their home\r\n         projects done correctly and to offer guidance on what tools and\r\n         products are best for the job.   Muti-tasking is a norm on an\r\n         everyday basis.  Expert in various machinery that cuts wood\r\n         and other building materials.   Expert driver of several\r\n         different forklifts.  Responsible for loading and unloading\r\n         merchandise.   Responsible for maintaining inventory and keeping\r\n         customers and the store safe.   Member of the\r\n         \"In-Focus\" safety/loss prevention team.\r\n\r\n                            RUBIES COSTUME CO.  Bayshore, NY - Warehouse\r\n                            Assistant Manager  (2004-2006)\r\n\r\n    Supervise day to day operations of 70+ employees for this\r\n    multi-million dollar distributor and pick-pack operation\r\nof costumes and novelty items.  Responsible for the logistics and\r\nensuring that all merchandise is received and shipped\r\nas per sensitive vendor restrictions.  Prepared all vendor instructions\r\nin every aspect; pricing, bar-coding, packaging and\r\nshipping as per vendors sensitive specifications.  Managed all inventory\r\nand consulted with several of our manufacturers to\r\nverify, correct and/or enhance merchandise and its packaging. Responsible\r\nfor efficiency of the warehouse, increasing\r\nproductivity, cutting costs and reducing overtime.\r\n\r\n         UNITED ELECTRIC POWER,  Hicksville, NY - Inventory Operations\r\n         Manager  (2000 - 2004)\r\n\r\n         Supervised and controlled all material flow and inventory\r\n         transactions in this fast-paced, high volume electrical supply\r\n         company.  Established and documented operational procedures\r\n         concerning all material flow.  Prepared yearly returns of\r\n         obsolete and/or slow moving inventory to vendors which increased\r\n         revenue.  Restructured warehouse and introduced RF\r\n         technology to optimize pick/pack operations.\r\n\r\n                             VEECO INSTRUMENTS, INC.,  Plainview, NY -\r\n                             Warehouse Supervisor  (1996 - 2000)\r\n\r\n        Responsible for the supervision and maintenance of all materials,\r\n        and warehouse operations for this\r\n        fast-paced, multi-million dollar manufacturer of computer data\r\n        storage equipment.  Worked closely with\r\n        purchasing, engineering and inspection departments to maintain\r\n        and update inventory REV levels, including all ECO\r\n        changes.  Involved with all phases of material management,\r\n        including MRP, to ensure that expeditions and procurements\r\n        were handled in the most efficient manner.  Coordinated with\r\n        production planning to prioritize all BOM's, projects and\r\n        pick-pack operations for the assembly kits, backorder payouts and\r\n        material requisitions for the production floor.   APICS\r\n        certified and member of ISO9001 team.\r\n\r\n\r\nJEFFREY A. DAVIS                                                     6713\r\nBray Road   Goshen, OH 45122\r\nJeffd1969@aol.com\r\nHm 513-625-7228    Cell 513-679-1446\r\n\r\n\r\nMILITARY EXPERIENCE\r\nUnited States Navy  (1988 - 1992)\r\nRank: E4    Supply / Logistics  POIC\r\nHonorable Discharge, 1992\r\n\r\nEDUCATION\r\nEastern Oklahoma State College, McAlester, OK\r\nMajor:  Business Management (1992 - 1993)\r\n\r\nSuffolk County Community College, Selden, NY\r\nMajor:  Business Management (1994 - 1997)\r\n\r\nREFERENCES\r\nAvailable upon request&lt;/ResumeText&gt;&lt;MilitaryExperience&gt;Veteran&lt;/MilitaryExperience&gt;&lt;WorkHistory&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;OWENS &amp;amp; MINOR&lt;/CompanyName&gt;&lt;JobTitle&gt;Warehouse Lead Supervisor&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2008 - Present&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;THE HOME DEPOT&lt;/CompanyName&gt;&lt;JobTitle&gt;- Sales Specialist&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2005 - Present&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;RUBIES COSTUME CO&lt;/CompanyName&gt;&lt;JobTitle&gt;- Warehouse Assistant Manager&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2004 - 01/01/2006&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;UNITED ELECTRIC POWER&lt;/CompanyName&gt;&lt;JobTitle&gt;Inventory Operations Manager&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2000 - 01/01/2004&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;VEECO INSTRUMENTS, INC&lt;/CompanyName&gt;&lt;JobTitle&gt;Warehouse Supervisor&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/1996 - 01/01/2000&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;/WorkHistory&gt;&lt;EducationHistory&gt;&lt;ExtSchool&gt;&lt;SchoolName&gt;Eastern Oklahoma State College&lt;/SchoolName&gt;&lt;Major&gt;Business Management&lt;/Major&gt;&lt;Degree /&gt;&lt;GraduationDate&gt;11993&lt;/GraduationDate&gt;&lt;/ExtSchool&gt;&lt;ExtSchool&gt;&lt;SchoolName&gt;Suffolk County Community College&lt;/SchoolName&gt;&lt;Major&gt;Business Management&lt;/Major&gt;&lt;Degree /&gt;&lt;GraduationDate&gt;11997&lt;/GraduationDate&gt;&lt;/ExtSchool&gt;&lt;/EducationHistory&gt;&lt;Warning&gt;&lt;/Warning&gt;&lt;/Packet&gt;</string>")
+          stub_request(:post, "http://ws.careerbuilder.com/resumes/resumes.asmx/V2_GetResume").with(:body => 'Packet=%3cPacket%3e%3cSessionToken%3e42%3c%2fSessionToken%3e%3cResumeID%3eRH52G867678F7GH02Q3%3c%2fResumeID%3e%3c%2fPacket%3e').to_return(:body => "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string xmlns=\"http://ws.careerbuilder.com/resumes/\">&lt;Packet&gt;&lt;TimeStamp&gt;6/25/2010 3:19:20 PM&lt;/TimeStamp&gt;&lt;ResumeID&gt;RH52G867678F7GH02Q3&lt;/ResumeID&gt;&lt;ResumeTitle&gt;Warehouse Distribution Specialist&lt;/ResumeTitle&gt;&lt;ContactName&gt;Jeffrey Davis&lt;/ContactName&gt;&lt;ContactEmail&gt;Jeffd1969@aol.com&lt;/ContactEmail&gt;&lt;ContactPhone&gt;513-625-7228&lt;/ContactPhone&gt;&lt;HomeLocation&gt;&lt;City&gt;Goshen&lt;/City&gt;&lt;State&gt;OH&lt;/State&gt;&lt;Country&gt;US&lt;/Country&gt;&lt;ZipCode&gt;45122&lt;/ZipCode&gt;&lt;WorkStatus&gt;Can work for any employer&lt;/WorkStatus&gt;&lt;/HomeLocation&gt;&lt;Relocations&gt;&lt;ExtLocation&gt;&lt;City&gt;Tokyo&lt;/City&gt;&lt;State/&gt;&lt;Country&gt;JP&lt;/Country&gt;&lt;ZipCode /&gt;&lt;WorkStatus&gt;Can work for any employer&lt;/WorkStatus&gt;&lt;/ExtLocation&gt;&lt;/Relocations&gt;&lt;MaxCommuteMiles&gt;10&lt;/MaxCommuteMiles&gt;&lt;TravelPreference&gt;Up to 25%&lt;/TravelPreference&gt;&lt;CurrentlyEmployed&gt;Yes&lt;/CurrentlyEmployed&gt;&lt;MostRecentPay&gt;&lt;Amount&gt;35776&lt;/Amount&gt;&lt;Per&gt;year&lt;/Per&gt;&lt;/MostRecentPay&gt;&lt;DesiredPay&gt;&lt;Amount&gt;45000&lt;/Amount&gt;&lt;Per&gt;year&lt;/Per&gt;&lt;/DesiredPay&gt;&lt;DesiredJobTypes&gt;&lt;string&gt;Full Time&lt;/string&gt;&lt;/DesiredJobTypes&gt;&lt;MostRecentTitle&gt;Warehouse Lead Supervisor&lt;/MostRecentTitle&gt;&lt;ExperienceMonths&gt;216&lt;/ExperienceMonths&gt;&lt;Management&gt;&lt;ManagedOthers&gt;No&lt;/ManagedOthers&gt;&lt;NumberManaged&gt;0&lt;/NumberManaged&gt;&lt;/Management&gt;&lt;JobsLastThreeYears&gt;0&lt;/JobsLastThreeYears&gt;&lt;LastJobTenureMonths&gt;0&lt;/LastJobTenureMonths&gt;&lt;SecurityClearance&gt;No&lt;/SecurityClearance&gt;&lt;FelonyConvictions&gt;No&lt;/FelonyConvictions&gt;&lt;HighestDegree&gt;None&lt;/HighestDegree&gt;&lt;Certifications /&gt;&lt;MotivationToChangeJobs /&gt;&lt;EmploymentType /&gt;&lt;LastUpdated&gt;5/23/2010 10:41:12 PM&lt;/LastUpdated&gt;&lt;Languages&gt;&lt;string&gt;English&lt;/string&gt;&lt;/Languages&gt;&lt;DesiredShiftPreferences&gt;&lt;string /&gt;&lt;/DesiredShiftPreferences&gt;&lt;Interests&gt;&lt;ExtInterest&gt;&lt;Interest&gt;Warehouse&lt;/Interest&gt;&lt;ExperienceMonths&gt;216&lt;/ExperienceMonths&gt;&lt;/ExtInterest&gt;&lt;/Interests&gt;&lt;ResumeText&gt;JEFFREY A. DAVIS&lt;/ResumeText&gt;&lt;MilitaryExperience&gt;Veteran&lt;/MilitaryExperience&gt;&lt;WorkHistory&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;OWENS &amp;amp; MINOR&lt;/CompanyName&gt;&lt;JobTitle&gt;Warehouse Lead Supervisor&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2008 - Present&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;THE HOME DEPOT&lt;/CompanyName&gt;&lt;JobTitle&gt;- Sales Specialist&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2005 - Present&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;RUBIES COSTUME CO&lt;/CompanyName&gt;&lt;JobTitle&gt;- Warehouse Assistant Manager&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2004 - 01/01/2006&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;UNITED ELECTRIC POWER&lt;/CompanyName&gt;&lt;JobTitle&gt;Inventory Operations Manager&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/2000 - 01/01/2004&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;ExtCompany&gt;&lt;CompanyName&gt;VEECO INSTRUMENTS, INC&lt;/CompanyName&gt;&lt;JobTitle&gt;Warehouse Supervisor&lt;/JobTitle&gt;&lt;Tenure&gt;01/01/1996 - 01/01/2000&lt;/Tenure&gt;&lt;/ExtCompany&gt;&lt;/WorkHistory&gt;&lt;EducationHistory&gt;&lt;ExtSchool&gt;&lt;SchoolName&gt;Eastern Oklahoma State College&lt;/SchoolName&gt;&lt;Major&gt;Business Management&lt;/Major&gt;&lt;Degree /&gt;&lt;GraduationDate&gt;11993&lt;/GraduationDate&gt;&lt;/ExtSchool&gt;&lt;ExtSchool&gt;&lt;SchoolName&gt;Suffolk County Community College&lt;/SchoolName&gt;&lt;Major&gt;Business Management&lt;/Major&gt;&lt;Degree /&gt;&lt;GraduationDate&gt;11997&lt;/GraduationDate&gt;&lt;/ExtSchool&gt;&lt;/EducationHistory&gt;&lt;Warning&gt;&lt;/Warning&gt;&lt;/Packet&gt;</string>")
+          @resume = @client.get_resume(:resume_id => "RH52G867678F7GH02Q3")
         end
 
-        it 'should return a resume result' do
-          @resume = @client.get_resume(:resume_id => "RH52G867678F7GH02Q3")
-          @resume.should == nil
+        it 'should return the correct timestamp' do
+          @resume.timestamp.should == Time.mktime(2010, 6, 25, 15, 19, 20)
+        end
+
+        it 'should return the correct id' do
+          @resume.id.should == "RH52G867678F7GH02Q3"
+        end
+
+        it 'should return the correct title' do
+          @resume.title.should == "Warehouse Distribution Specialist"
+        end
+
+        it 'should return the correct contact name' do
+          @resume.contact_name.should == "Jeffrey Davis"
+        end
+
+        it 'should return the correct contact email' do
+          @resume.contact_email.should == "Jeffd1969@aol.com"
+        end
+
+        it 'should return the correct contact phone' do
+          @resume.contact_phone.should == "513-625-7228"
+        end
+
+        describe "#home_location" do
+
+          before do
+            @home_location = @resume.home_location
+          end
+
+          it 'should return the correct city' do
+            @home_location.city.should == "Goshen"
+          end
+
+          it 'should return the correct state' do
+            @home_location.state.should == "OH"
+          end
+
+          it 'should return the correct zip code' do
+            @home_location.zip_code.should == "45122"
+          end
+
+          it 'should return the correct country' do
+            @home_location.country.should == "US"
+          end
+
+          it 'should return the correct work status' do
+            @home_location.work_status.should == "Can work for any employer"
+          end
+
+        end
+
+        describe "#relocations" do
+
+          before do
+            @relocations = @resume.relocations
+            @relocation  = @relocations.first
+          end
+
+          it 'should return the correct city' do
+            @relocation.city.should == "Tokyo"
+          end
+
+          it 'should return the correct state' do
+            @relocation.state.should == ""
+          end
+
+          it 'should return the correct zip code' do
+            @relocation.zip_code.should == ""
+          end
+
+          it 'should return the correct country' do
+            @relocation.country.should == "JP"
+          end
+
+          it 'should return the correct work status' do
+            @relocation.work_status.should == "Can work for any employer"
+          end
+
+        end
+
+        it 'should return the correct max commute miles' do
+          @resume.max_commute_miles.should == 10
+        end
+
+        it 'should return the correct travel preference' do
+          @resume.travel_preference.should == "Up to 25%"
+        end
+
+        it 'should return the correct currently employed' do
+          @resume.currently_employed.should == "Yes"
+        end
+
+        describe "#most_recent_pay" do
+
+          before do
+            @most_recent_pay = @resume.most_recent_pay
+          end
+
+          it 'should return the correct amount' do
+            @most_recent_pay.amount.should == 35776
+          end
+
+          it 'should return the correct per' do
+            @most_recent_pay.per.should == "year"
+          end
+
+        end
+
+        describe "#desired_pay" do
+
+          before do
+            @desired_pay = @resume.desired_pay
+          end
+
+          it 'should return the correct amount' do
+            @desired_pay.amount.should == 45000
+          end
+
+          it 'should return the correct per' do
+            @desired_pay.per.should == "year"
+          end
+
+        end
+
+        it 'should return the correct desired job types'
+
+        it 'should return the correct most recent title' do
+          @resume.most_recent_title.should == "Warehouse Lead Supervisor"
+        end
+
+        it 'should return the correct experience months' do
+          @resume.experience_months.should == 216
+        end
+
+        it 'should return the correct managed others' do
+          @resume.managed_others.should == "No"
+        end
+
+        it 'should return the correct number managed' do
+          @resume.number_managed.should == 0
+        end
+
+        it 'should return the correct jobs last three years' do
+          @resume.jobs_last_three_years.should == 0
+        end
+
+        it 'should return the correct last job tenure months' do
+          @resume.last_job_tenure_months.should == 0
+        end
+
+        it 'should return the correct security clearance' do
+          @resume.security_clearance.should == "No"
+        end
+
+        it 'should return the correct felony convictions' do
+          @resume.felony_convictions.should == "No"
+        end
+
+        it 'should return the correct highest degree' do
+          @resume.highest_degree.should == "None"
+        end
+
+        it 'should return the correct certifications' do
+          @resume.certifications.should == ""
+        end
+
+        it 'should return the correct motivation to change jobs' do
+          @resume.motivation_to_change_jobs.should == ""
+        end
+
+        it 'should return the correct employment type' do
+          @resume.employment_type.should == ""
+        end
+
+        it 'should return the correct last updated' do
+          @resume.last_updated.should == Time.mktime(2010, 5, 23, 22, 41, 12)
+        end
+
+        it 'should return the correct languages'
+
+        it 'should return the correct desired shift preferences'
+
+        describe "#interests" do
+
+          before do
+            @interests = @resume.interests
+            @interest  = @interests.first
+          end
+
+          it 'should return the correct interest' do
+            @interest.interest.should == "Warehouse"
+          end
+
+          it 'should return the correct experience in months' do
+            @interest.experience_months.should == 216
+          end
+
+        end
+
+        it 'should return the correct resume text' do
+          @resume.text.should == "JEFFREY A. DAVIS"
+        end
+
+        it 'should return the military experience' do
+          @resume.military_experience.should == "Veteran"
+        end
+
+        describe "#companies" do
+
+          before do
+            @companies = @resume.companies
+            @company   = @companies.first
+          end
+
+          it 'should return the correct company name' do
+            @company.name.should == "OWENS & MINOR"
+          end
+
+          it 'should return the correct job title' do
+            @company.job_title.should == "Warehouse Lead Supervisor"
+          end
+
+          it 'should return the correct tenure' do
+            @company.tenure.should == "01/01/2008 - Present"
+          end
+
+        end
+
+        describe "#schools" do
+
+          before do
+            @schools = @resume.schools
+            @school  = @schools.first
+          end
+
+          it 'should return the correct school name' do
+            @school.name.should == "Eastern Oklahoma State College"
+          end
+
+          it 'should return the correct major' do
+            @school.major.should == "Business Management"
+          end
+
+          it 'should return the correct degree' do
+            @school.degree.should == ""
+          end
+
+          it 'should return the correct graduation date' do
+            @school.graduation_date.should == "11993"
+          end
+
+        end
+
+        it 'should return the correct warning' do
+          @resume.warning.should == ""
         end
 
       end

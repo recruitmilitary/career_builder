@@ -20,7 +20,7 @@ module CareerBuilder
     # element :contact_email_md5, String, :tag => "ContactEmailMD5"
 
     has_one :home_location, Location, :tag => "HomeLocation"
-    has_many :relocations, Location, :tag => "ExtLocations"
+    has_many :relocations, Location, :tag => "ExtLocation"
 
     has_one :most_recent_pay, Pay, :tag => "MostRecentPay"
     has_one :desired_pay, Pay, :tag => "DesiredPay"
@@ -29,6 +29,7 @@ module CareerBuilder
     has_many :companies, Company, :tag => "ExtCompany"
     has_many :schools, School, :tag => "ExtSchool"
 
+    element :timestamp, Time, :tag => "TimeStamp"
     element :id, String, :tag => "ResumeID"
     element :title, String, :tag => "ResumeTitle"
     element :contact_name, String, :tag => "ContactName"
@@ -41,8 +42,8 @@ module CareerBuilder
     # element :desired_job_types, String, :tag => "DesiredJobTypes"
     element :most_recent_title, String, :tag => "MostRecentTitle"
     element :experience_months, Integer, :tag => "ExperienceMonths"
-    element :managed_others, String, :tag => "ManagedOthers"
-    element :number_managed, Integer, :tag => "NumberManaged"
+    element :managed_others, String, :tag => "//ManagedOthers"
+    element :number_managed, Integer, :tag => "//NumberManaged"
     element :jobs_last_three_years, Integer, :tag => "JobsLastThreeYears"
     element :last_job_tenure_months, Integer, :tag => "LastJobTenureMonths"
     element :security_clearance, String, :tag => "SecurityClearance"

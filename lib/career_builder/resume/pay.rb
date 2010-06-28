@@ -2,7 +2,7 @@ class Pay
 
   include HappyMapper
 
-  element :amount, String, :tag => "Amount"
+  element :amount, Integer, :tag => "Amount"
   element :per, String, :tag => "Per"
 
 end
