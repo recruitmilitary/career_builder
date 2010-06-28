@@ -4,15 +4,15 @@ module CareerBuilder
 
     attr_reader :search_options, :client
 
-    def initialize(options)
-      @client = options.delete(:client)
+    def initialize(client, options)
+      @client = client
       @search_options = options
     end
 
     def each
       current_page = search_options[:page] || 1
 
-      search = client.advanced_resume_search(search_options.merge(:page => current_page))
+      search = client.advanced_resume_search(search_options.merge(:page_number => current_page))
 
       results = search.results
       hits = search.hits
@@ -28,7 +28,7 @@ module CareerBuilder
 
         break if current_page > max_page
 
-        search = client.advanced_resume_search(search_options.merge(:page => current_page))
+        search = client.advanced_resume_search(search_options.merge(:page_number => current_page))
         results = search.results
 
       end

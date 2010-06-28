@@ -17,11 +17,15 @@ module CareerBuilder
     private
 
     def validate_options
-      raise ArgumentError unless valid_options?
+      raise ArgumentError, "Invalid options #{invalid_options}" unless valid_options?
+    end
+
+    def invalid_options
+      (options.keys - self.class.const_get(:VALID_OPTIONS))
     end
 
     def valid_options?
-      (options.keys - self.class.const_get(:VALID_OPTIONS)).empty?
+      invalid_options.empty?
     end
 
     def session_token
@@ -59,7 +63,7 @@ module CareerBuilder
         elements << transform_key_value_to_tag(:session_token, session_token)
       end
 
-      options.each do |key, value|
+      options.sort_by { |k, v| k.to_s }.each do |key, value|
         elements << transform_key_value_to_tag(key, value)
       end
 
