@@ -16,6 +16,10 @@ module CareerBuilder
       !session_token.nil?
     end
 
+    def resumes(options = {})
+      Resume::LazyCollection.new(options)
+    end
+
     def advanced_resume_search(options = {})
       Requests::AdvancedResumeSearch.new(self, options).perform
     end
