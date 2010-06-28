@@ -31,7 +31,7 @@ module CareerBuilder
         super
         response = perform_request("V2_AdvancedResumeSearch", transform_options_to_xml(options))
 
-        ResumeSearch.parse(response)
+        API::ResumeSearch.parse(response)
       end
 
     end
