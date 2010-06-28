@@ -66,7 +66,7 @@ Client#get_resume is not called when retrieving the id
 
 Client#get_resume(:resume_id => "42XXASDFJKLQWERTY") is called behind the scenes in order to fetch the real email address associated with the resume.
 
-    resume.real_email # => "michael@jordan.com"
+    resume.real_contact_email # => "michael@jordan.com"
 
 ## TODO
 
