@@ -40,6 +40,7 @@ This method requires your AccountDID, I could not find an official way to find t
 2. Click "My CareerBuilder" -> "My Account Info"
 3. Copy the AccountDID URL parameter from your address bar
 
+
     client.resume_actions_remaining_today(:account_did => "D7C10Q67ZKG123VCRMC") # => 42
 
 ### Resume Convenience Methods / Classes
