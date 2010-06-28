@@ -9,6 +9,10 @@ module CareerBuilder
       @client = client
     end
 
+    def real_contact_email
+      full_resume.contact_email
+    end
+
     private
 
     def method_missing(meth, *args, &block)
