@@ -67,7 +67,7 @@ module CareerBuilder
     end
 
     def perform_request(method, packet_contents)
-      Net::HTTP.post_form(URI.parse(RESUME_SERVICE_ENDPOINT_URL + "/#{method}"), 'Packet' => "<Packet>#{packet_contents}</Packet>")
+      parse_terrible_response Net::HTTP.post_form(URI.parse(RESUME_SERVICE_ENDPOINT_URL + "/#{method}"), 'Packet' => "<Packet>#{packet_contents}</Packet>")
     end
 
   end

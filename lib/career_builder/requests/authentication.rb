@@ -6,7 +6,7 @@ module CareerBuilder
 
       def perform
         response = perform_request("BeginSessionV2", "<Email>#{options[:email]}</Email><Password>#{options[:password]}</Password>")
-        packet = Nokogiri::XML(parse_terrible_response(response))
+        packet = Nokogiri::XML(response)
 
         if session_token = packet.search("//SessionToken")
           session_token_text = session_token.text

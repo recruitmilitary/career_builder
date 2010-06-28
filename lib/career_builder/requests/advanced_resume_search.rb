@@ -31,8 +31,7 @@ module CareerBuilder
         super
         response = perform_request("V2_AdvancedResumeSearch", transform_options_to_xml(options))
 
-        xml_from_response = parse_terrible_response(response)
-        ResumeSearchResult.parse(xml_from_response)
+        ResumeSearchResult.parse(response)
       end
 
     end

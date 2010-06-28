@@ -10,8 +10,7 @@ module CareerBuilder
         super
         response = perform_request("V2_GetResume", transform_options_to_xml(options))
 
-        xml_from_response = parse_terrible_response(response)
-        Resume.parse(xml_from_response, :single => true)
+        Resume.parse(response, :single => true)
       end
 
     end
