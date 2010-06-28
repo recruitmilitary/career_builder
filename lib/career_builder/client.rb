@@ -28,6 +28,10 @@ module CareerBuilder
       Requests::GetResume.new(self, options).perform
     end
 
+    def resume_actions_remaining_today(options = {})
+      Requests::ResumeActionsRemainingToday.new(self, options).perform
+    end
+
   end
 
 end

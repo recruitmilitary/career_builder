@@ -35,7 +35,8 @@ module CareerBuilder
     end
 
     CUSTOM_KEY_TRANSFORMS = {
-      :resume_id => "ResumeID"
+      :resume_id => "ResumeID",
+      :account_did => "AccountDID"
     }
 
     def transform_key(key)
