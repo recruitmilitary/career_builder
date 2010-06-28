@@ -350,7 +350,18 @@ describe CareerBuilder::Client do
 
         end
 
-        it 'should return the correct desired job types'
+        describe "#desired_job_types" do
+
+          before do
+            @desired_job_types = @resume.desired_job_types
+            @desired_job_type  = @desired_job_types.first
+          end
+
+          it 'should return the correct text' do
+            @desired_job_type.text.should == "Full Time"
+          end
+
+        end
 
         it 'should return the correct most recent title' do
           @resume.most_recent_title.should == "Warehouse Lead Supervisor"
@@ -404,9 +415,31 @@ describe CareerBuilder::Client do
           @resume.last_updated.should == Time.mktime(2010, 5, 23, 22, 41, 12)
         end
 
-        it 'should return the correct languages'
+        describe "#languages" do
 
-        it 'should return the correct desired shift preferences'
+          before do
+            @languages = @resume.languages
+            @language  = @languages.first
+          end
+
+          it 'should return the correct text' do
+            @language.text.should == "English"
+          end
+
+        end
+
+        describe "#desired_shift_preferences" do
+
+          before do
+            @desired_shift_preferences = @resume.desired_shift_preferences
+            @desired_shift_preference  = @desired_shift_preferences.first
+          end
+
+          it 'should return the correct desired shift preferences' do
+            @desired_shift_preference.text.should == ""
+          end
+
+        end
 
         describe "#interests" do
 

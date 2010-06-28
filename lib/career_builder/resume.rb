@@ -28,6 +28,9 @@ module CareerBuilder
     has_many :interests, Interest, :tag => "ExtInterest"
     has_many :companies, Company, :tag => "ExtCompany"
     has_many :schools, School, :tag => "ExtSchool"
+    has_many :desired_job_types, JobType, :tag => "DesiredJobTypes"
+    has_many :languages, Language, :tag => "Languages"
+    has_many :desired_shift_preferences, ShiftPreference, :tag => "DesiredShiftPreferences"
 
     element :timestamp, Time, :tag => "TimeStamp"
     element :id, String, :tag => "ResumeID"
@@ -38,8 +41,6 @@ module CareerBuilder
     element :max_commute_miles, Integer, :tag => "MaxCommuteMiles"
     element :travel_preference, String, :tag => "TravelPreference"
     element :currently_employed, String, :tag => "CurrentlyEmployed"
-    # having problems with this type
-    # element :desired_job_types, String, :tag => "DesiredJobTypes"
     element :most_recent_title, String, :tag => "MostRecentTitle"
     element :experience_months, Integer, :tag => "ExperienceMonths"
     element :managed_others, String, :tag => "//ManagedOthers"
@@ -53,9 +54,6 @@ module CareerBuilder
     element :motivation_to_change_jobs, String, :tag => "MotivationToChangeJobs"
     element :employment_type, String, :tag => "EmploymentType"
     element :last_updated, Time, :tag => "LastUpdated"
-    # having problems with this type
-    # element :languages, String, :tag => "Languages"
-    # element :desired_shift_preferences, String, :tag => "DesiredShiftPreferences"
     element :text, String, :tag => "ResumeText"
     element :military_experience, String, :tag => "MilitaryExperience"
     element :warning, String, :tag => "Warning"
