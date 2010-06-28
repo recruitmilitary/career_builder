@@ -1,6 +1,6 @@
 # CareerBuilder
 
-Ruby wrapper for the "CareerBuilder V2 HTTP XML API"[http://ws.careerbuilder.com/schemas/].  While the CareerBuilder::Client mimics the interface of the HTTP API, it also provides some convenience methods to make your life easier.
+Ruby wrapper for the [CareerBuilder V2 HTTP XML API](http://ws.careerbuilder.com/schemas/).  While the CareerBuilder::Client mimics the interface of the HTTP API, it also provides some convenience methods to make your life easier.
 
 **NOTE** currently only the resume portion of the API is implemented, others are a work in progress.
 
