@@ -37,9 +37,8 @@ http://ws.careerbuilder.com/resumes/resumes.asmx
 This method requires your AccountDID, I could not find an official way to find this identifier, but I followed these steps:
 
 1. Sign into CareerBuilder with your email / password credentials
-2. Click "My CareerBuilder" -> "My Account Info"
+2. Click My CareerBuilder -> My Account Info
 3. Copy the AccountDID URL parameter from your address bar
-
 
     client.resume_actions_remaining_today(:account_did => "D7C10Q67ZKG123VCRMC") # => 42
 
