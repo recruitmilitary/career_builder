@@ -218,6 +218,20 @@ describe CareerBuilder::Client do
 
       end
 
+      context "when out of credits" do
+
+        before do
+          stub_request(:post, "http://ws.careerbuilder.com/resumes/resumes.asmx/V2_GetResume").with(:body => 'Packet=%3cPacket%3e%3cSessionToken%3e42%3c%2fSessionToken%3e%3cResumeID%3eRH52G867678F7GH02Q3%3c%2fResumeID%3e%3c%2fPacket%3e').to_return(:body => "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<string xmlns=\"http://ws.careerbuilder.com/resumes/\">&lt;Packet&gt;&lt;Warning&gt;&lt;/Warning&gt;&lt;/Packet&gt;</string>")
+        end
+
+        it 'should raise OutOfCredits' do
+          expect {
+            @resume = @client.get_resume(:resume_id => "RH52G867678F7GH02Q3")
+          }.to raise_error(CareerBuilder::OutOfCredits)
+        end
+
+      end
+
       context "with valid options" do
 
         before do

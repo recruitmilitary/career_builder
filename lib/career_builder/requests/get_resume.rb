@@ -10,7 +10,11 @@ module CareerBuilder
         super
         response = perform_request("V2_GetResume", transform_options_to_xml(options))
 
-        API::Resume.parse(response, :single => true)
+        if response =~ /ResumeID/ # valid response
+          API::Resume.parse(response, :single => true)
+        else
+          raise OutOfCredits
+        end
       end
 
     end
