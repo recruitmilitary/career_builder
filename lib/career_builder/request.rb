@@ -72,6 +72,9 @@ module CareerBuilder
 
     def perform_request(method, packet_contents)
       parse_terrible_response Net::HTTP.post_form(URI.parse(RESUME_SERVICE_ENDPOINT_URL + "/#{method}"), 'Packet' => "<Packet>#{packet_contents}</Packet>")
+    rescue Errno::ECONNRESET
+      warn "The connection was reset, retrying"
+      retry
     end
 
   end
