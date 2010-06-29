@@ -10,8 +10,7 @@ module CareerBuilder
         super
         response = perform_request("V2_ResumeActionsRemainingToday", transform_options_to_xml(options))
 
-        xml_from_response = parse_terrible_response(response)
-        doc = Nokogiri::XML(xml_from_response)
+        doc = Nokogiri::XML(response)
         doc.xpath("//Packet").text.to_i
       end
 
