@@ -9,6 +9,22 @@ module CareerBuilder
 
       include HappyMapper
 
+      module RawResponse
+        XML_START = %Q{<?xml version="1.0" encoding="utf-8"?>\n<string xmlns="http://ws.careerbuilder.com/resumes/">}
+        XML_END   = %Q{</string>}
+
+        def raw_response
+          XML_START + @raw_response + XML_END
+        end
+      end
+
+      def self.parse(xml, options = {})
+        resume = super
+        resume.instance_variable_set(:"@raw_response", xml)
+        resume.extend RawResponse
+        resume
+      end
+
       tag 'Packet'
 
       # element :home_location, String, :tag => "HomeLocation"
