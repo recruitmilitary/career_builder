@@ -1,35 +1,27 @@
+require 'career_builder/client/authentication'
+require 'career_builder/client/request'
+require 'career_builder/client/advanced_resume_search'
+require 'career_builder/client/get_resume'
+require 'career_builder/client/resume_actions_remaining_today'
+
 module CareerBuilder
 
   class Client
 
-    attr_reader :email, :password, :session_token
+    include Authentication
+    include Request
+    include AdvancedResumeSearch
+    include GetResume
+    include ResumeActionsRemainingToday
+
+    attr_reader :email, :password
 
     def initialize(email, password)
       @email, @password = email, password
     end
 
-    def authenticate
-      @session_token = Requests::Authentication.new(self, :email => email, :password => password).perform
-    end
-
-    def authenticated?
-      !session_token.nil?
-    end
-
     def resumes(options = {})
       Resume::LazyCollection.new(self, options)
-    end
-
-    def advanced_resume_search(options = {})
-      Requests::AdvancedResumeSearch.new(self, options).perform
-    end
-
-    def get_resume(options = {})
-      Requests::GetResume.new(self, options).perform
-    end
-
-    def resume_actions_remaining_today(options = {})
-      Requests::ResumeActionsRemainingToday.new(self, options).perform
     end
 
   end

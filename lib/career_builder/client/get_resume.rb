@@ -1,14 +1,15 @@
 module CareerBuilder
-
-  module Requests
-
-    class GetResume < Request::Authenticated
+  class Client
+    module GetResume
 
       VALID_OPTIONS = [:resume_id, :cust_acct_code, :get_word_doc_if_available].freeze
 
-      def perform
-        super
-        response = perform_request("V2_GetResume", transform_options_to_xml(options))
+      def get_resume(options = {})
+        unless (invalid_options = options.keys - VALID_OPTIONS).empty?
+          raise ArgumentError, "Invalid options #{invalid_options}"
+        end
+
+        response = auth_request("V2_GetResume", options)
 
         if response =~ /ResumeID/ # valid response
           API::Resume.parse(response, :single => true)
@@ -18,7 +19,5 @@ module CareerBuilder
       end
 
     end
-
   end
-
 end

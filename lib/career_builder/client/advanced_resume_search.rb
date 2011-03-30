@@ -1,8 +1,6 @@
 module CareerBuilder
-
-  module Requests
-
-    class AdvancedResumeSearch < Request::Authenticated
+  class Client
+    module AdvancedResumeSearch
 
       # List of valid options available at:
       # http://ws.careerbuilder.com/resumes/resumes.asmx/V2_AdvancedResumeSearch_ValidFields
@@ -27,15 +25,16 @@ module CareerBuilder
                        :rsadid, :cb_minimum_experience,
                        :cb_maximum_experience].freeze
 
-      def perform
-        super
-        response = perform_request("V2_AdvancedResumeSearch", transform_options_to_xml(options))
+      def advanced_resume_search(options = {})
+        unless (invalid_options = options.keys - VALID_OPTIONS).empty?
+          raise ArgumentError, "Invalid options #{invalid_options}"
+        end
+
+        response = auth_request("V2_AdvancedResumeSearch", options)
 
         API::ResumeSearch.parse(response)
       end
 
     end
-
   end
-
 end
