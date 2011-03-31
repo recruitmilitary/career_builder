@@ -23,7 +23,7 @@ module CareerBuilder
 
         current_page += 1
 
-        search = client.advanced_resume_search(search_options.merge(:page_number => current_page))
+        search = client.advanced_resume_search(search_options.merge(:page_number => current_page, :rows_per_page => 500))
         results = search.results
         break if results.empty?
       end
