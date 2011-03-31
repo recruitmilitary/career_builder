@@ -16,8 +16,9 @@ module CareerBuilder
 
     attr_reader :email, :password
 
-    def initialize(email, password)
+    def initialize(email, password, options = {})
       @email, @password = email, password
+      @debug = options.fetch(:debug) { false }
     end
 
     def resumes(options = {})

@@ -19,9 +19,15 @@ module CareerBuilder
 
         options_as_xml = transform_options_to_xml(options)
 
-        packet = { 'Packet' => "<Packet>#{options_as_xml}</Packet>" }
+        form_data = { 'Packet' => "<Packet>#{options_as_xml}</Packet>" }
 
-        response = Net::HTTP.post_form(uri, packet)
+        req = Net::HTTP::Post.new(uri.path)
+        req.form_data = form_data
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.set_debug_output $stderr if @debug
+        response = http.start { |http|
+          http.request(req)
+        }
 
         parse_terrible_response(response)
       end
