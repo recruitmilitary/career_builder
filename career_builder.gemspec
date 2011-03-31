@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{career_builder}
-  s.version = "0.1.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Guterl"]
-  s.date = %q{2011-01-06}
+  s.date = %q{2011-03-31}
   s.description = %q{Ruby wrapper for the CareerBuilder V2 HTTP XML API}
   s.email = %q{mguterl@gmail.com}
   s.extra_rdoc_files = [
@@ -39,13 +39,12 @@ Gem::Specification.new do |s|
     "lib/career_builder/api/shift_preference.rb",
     "lib/career_builder/api/word_document.rb",
     "lib/career_builder/client.rb",
+    "lib/career_builder/client/advanced_resume_search.rb",
+    "lib/career_builder/client/authentication.rb",
+    "lib/career_builder/client/get_resume.rb",
+    "lib/career_builder/client/request.rb",
+    "lib/career_builder/client/resume_actions_remaining_today.rb",
     "lib/career_builder/errors.rb",
-    "lib/career_builder/request.rb",
-    "lib/career_builder/request/authenticated.rb",
-    "lib/career_builder/requests/advanced_resume_search.rb",
-    "lib/career_builder/requests/authentication.rb",
-    "lib/career_builder/requests/get_resume.rb",
-    "lib/career_builder/requests/resume_actions_remaining_today.rb",
     "lib/career_builder/resume.rb",
     "lib/career_builder/resume/lazy_collection.rb",
     "spec/career_builder/client_spec.rb",
